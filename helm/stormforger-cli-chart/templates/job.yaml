@@ -12,6 +12,7 @@ spec:
   template:
     metadata:
       labels:
+        app.kubernetes.io/name: {{ .Values.name }}
         app: {{ .Values.name }}
     spec:
       restartPolicy: "Never"
@@ -21,7 +22,7 @@ spec:
         command: 
           - "/bin/bash"
           - "-c"
-          - forge test-case create giantswarm/test cases/test_case.js || forge test-case update giantswarm/test cases/test_case.js
+          - forge test-case create giantswarm/{{ .Values.test.name }} cases/test_case.js || forge test-case update giantswarm/{{ .Values.test.name }} cases/test_case.js
         volumeMounts:
         - name: stormforger
           mountPath: "/root"
@@ -36,7 +37,7 @@ spec:
         command: 
           - "/bin/bash"
           - "-c"
-          - sleep 10 && forge test-case launch giantswarm/test --output json | sed -n 's/.*"scope":"\(.[^"]*\)",.*/\1/p' > /tmp/scope.conf
+          - sleep 10 && forge test-case launch giantswarm/{{ .Values.test.name }} --output json | sed -n 's/.*"scope":"\(.[^"]*\)",.*/\1/p' > /tmp/scope.conf
         volumeMounts:
         - name: stormforger
           mountPath: "/root"
@@ -60,9 +61,9 @@ spec:
       volumes:
       - name: stormforger
         secret:
-          secretName: stormforger
+          secretName: {{ .Values.name }}
       - name: config
         emptyDir: {}
       - name: cases
         configMap:
-          name: stormforger
+          name: {{ .Values.name }}
