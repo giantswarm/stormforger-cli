@@ -5,6 +5,6 @@ image:
   tag: latest
 
 test:
-  endpoint: http://loadtest-app.ss863.k8s.ginger.eu-central-1.aws.gigantic.io/
+  endpoint: https://docs.giantswarm.io/
 auth:
-  token: blah
+  token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzZjp1c2VyOnBpcG8wMm1peCIsImV4cCI6MTU5MzIwODQ0MSwianRpIjoibXlxc3NwcV9LM1ZWYmU2My1YangifQ.XQIQ6ohr9K6ScKACHV1LRT5o0Ds05TEqjsucIZZ_VuM
