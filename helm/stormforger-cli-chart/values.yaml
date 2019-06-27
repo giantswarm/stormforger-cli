@@ -5,6 +5,7 @@ image:
   tag: latest
 managed_by: giantswarm
 name: stormforger-cli
+namespace: loadtest
 test:
   endpoint: http://testapp.ss863.k8s.ginger.eu-central-1.aws.gigantic.io/
   name: test
