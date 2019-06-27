@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.name }}
+  labels:
+    app.kubernetes.io/name: {{ .Values.name }}
+    helm.sh/chart: {{ .Chart.Name }}
+    app.kubernetes.io/managed-by: {{ .Values.managed_by }}
+data:
+  test_case.js: |-
+    definition.setTarget("{{ .Values.test.endpoint }}");
+
+    definition.setArrivalPhases([
+      {
+        duration: 1 * 60,  // 5min in seconds
+        rate: 1.0,         // clients per seconds to launch
+      },
+    ]);
+
+    definition.session("ping", function(session) {
+      session.get("/");
+    });

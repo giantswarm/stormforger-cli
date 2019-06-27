@@ -1,0 +1,10 @@
+auth:
+  token: my-token
+image:
+  repository: stormforger/cli
+  tag: latest
+managed_by: giantswarm
+name: stormforger-cli
+test:
+  endpoint: http://testapp.ss863.k8s.ginger.eu-central-1.aws.gigantic.io/
+  name: test
