@@ -1,0 +1,68 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Values.name }}
+  labels:
+    app.kubernetes.io/name: {{ .Values.name }}
+    helm.sh/chart: {{ .Chart.Name }}
+    app.kubernetes.io/managed-by: {{ .Values.managed_by }}
+spec:
+  ttlSecondsAfterFinished: 1000
+  backoffLimit: 1
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.name }}
+    spec:
+      restartPolicy: "Never"
+      initContainers:
+      - name: create-test
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        command: 
+          - "/bin/bash"
+          - "-c"
+          - forge test-case create giantswarm/test cases/test_case.js || forge test-case update giantswarm/test cases/test_case.js
+        volumeMounts:
+        - name: stormforger
+          mountPath: "/root"
+          readOnly: true
+        - name: config
+          mountPath: /tmp
+        - name: cases
+          mountPath: "/cases"
+          readOnly: true
+      - name: launch-test
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        command: 
+          - "/bin/bash"
+          - "-c"
+          - sleep 10 && forge test-case launch giantswarm/test --output json | sed -n 's/.*"scope":"\(.[^"]*\)",.*/\1/p' > /tmp/scope.conf
+        volumeMounts:
+        - name: stormforger
+          mountPath: "/root"
+          readOnly: true
+        - name: config
+          mountPath: /tmp
+      containers:
+      - name: watch-test
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        command: 
+          - "/bin/bash"
+          - "-c"
+          - "forge test-run watch $(cat /tmp/scope.conf) --output json > /tmp/output.json && forge test-run show $(cat /tmp/scope.conf) --output json"
+        volumeMounts:
+        - name: stormforger
+          mountPath: "/root"
+          readOnly: true
+        - name: config
+          mountPath: /tmp
+      restartPolicy: Never
+      volumes:
+      - name: stormforger
+        secret:
+          secretName: stormforger
+      - name: config
+        emptyDir: {}
+      - name: cases
+        configMap:
+          name: stormforger

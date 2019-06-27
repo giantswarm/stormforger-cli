@@ -1,0 +1,10 @@
+name: stormforger
+managed_by: giantswarm
+image:
+  repository: stormforger/cli
+  tag: latest
+
+test:
+  endpoint: http://loadtest-app.ss863.k8s.ginger.eu-central-1.aws.gigantic.io/
+auth:
+  token: blah
