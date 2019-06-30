@@ -11,6 +11,13 @@ data:
   test_case.js: |-
     definition.setTarget("{{ .Values.test.endpoint }}");
 
+    definition.setTestOptions({
+      cluster: {
+        region: "{{ .Values.test.cluster.region }}",
+        sizing: "{{ .Values.test.cluster.sizing }}"
+      },
+    });
+
     definition.setArrivalPhases([
       {
         duration: 1 * 60,  // 5min in seconds

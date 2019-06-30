@@ -8,4 +8,7 @@ name: stormforger-cli
 namespace: default
 test:
   endpoint: http://testapp.ss863.k8s.ginger.eu-central-1.aws.gigantic.io/
+  cluster:
+    region: eu-central-1
+    sizing: preflight
   name: test
